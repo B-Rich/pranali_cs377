@@ -80,8 +80,8 @@ gpumachine.o: gpumachine.c gpukernel-local.h gpukernel.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h \
  /extra/tool-chain/sysroot/usr/include/sys/time.h \
- ../../src/libm2skernel/../mylist.h ../../src/libdisasm/machine.dat \
- ../../src/libgpudisasm/gpudisasm.h ../../src/libgpudisasm/gpudisasm.dat \
+ ../../src/libdisasm/machine.dat ../../src/libgpudisasm/gpudisasm.h \
+ ../../src/libgpudisasm/gpudisasm.dat \
  /extra/tool-chain/sysroot/usr/include/math.h \
  /extra/tool-chain/sysroot/usr/include/bits/huge_val.h \
  /extra/tool-chain/sysroot/usr/include/bits/huge_valf.h \
@@ -269,8 +269,6 @@ opencl.dat:
 /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h:
 
 /extra/tool-chain/sysroot/usr/include/sys/time.h:
-
-../../src/libm2skernel/../mylist.h:
 
 ../../src/libdisasm/machine.dat:
 

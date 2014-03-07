@@ -40,20 +40,41 @@
 #include <errno.h>
 #include <gpukernel.h>
 #include <sys/time.h>
-#include "../mylist.h"
-
-/* Some forward declarations */
+//#include "../mylist.h"
 struct ctx_t;
+struct node_struct
+{
+  long long int inst_no;
+  struct ctx_t *ctx;
+  struct node_struct* next;
+}; 
+typedef struct node_struct node;
+struct mylist_struct
+{
+  node* head;
+};
+
+
+typedef struct mylist_struct mylist;
+void my_insert(long long int _inst_no,struct ctx_t *_ctx,mylist* l);
+node* my_top(mylist *l);
+void my_delete(mylist* l);
+/* Some forward declarations */
+
 struct fd_t;
 struct mylist_struct;
 struct node_struct;
 int instr_slice;
-int num_instr_executed;
+long long int num_instr_executed;
 int* memory_access_table;
 int num_virtual_blocks;
 int last_visited_block;
 int delay_per_block;
+int heads, tracks, sectors;
+int trackCost, sectorCost;
 struct mylist_struct* interrupt_list;
+
+
 /* Maximum length for paths */
 #define MAX_PATH_SIZE  200
 
@@ -69,11 +90,11 @@ struct mylist_struct* interrupt_list;
 #define MEM_PAGE_COUNT     1024
 
 enum mem_access_enum {
-	mem_access_read   = 0x01,
-	mem_access_write  = 0x02,
-	mem_access_exec   = 0x04,
-	mem_access_init   = 0x08,
-	mem_access_modif  = 0x10
+  mem_access_read   = 0x01,
+  mem_access_write  = 0x02,
+  mem_access_exec   = 0x04,
+  mem_access_init   = 0x08,
+  mem_access_modif  = 0x10
 };
 
 /* Safe mode */
@@ -81,29 +102,29 @@ extern int mem_safe_mode;
 
 /* Host mapping: mappings performed with file descriptors other than -1 */
 struct mem_host_mapping_t {
-	void *host_ptr;  /* Pointer to the host memory space */
-	uint32_t addr;  /* Guest range base */
-	uint32_t size;  /* Host mapping size */
-	int pages;  /* Number of allocated pages left */
-	char path[MAX_PATH_SIZE];  /* Path of the mapped file */
-	struct mem_host_mapping_t *next;  /* Linked list */
+  void *host_ptr;  /* Pointer to the host memory space */
+  uint32_t addr;  /* Guest range base */
+  uint32_t size;  /* Host mapping size */
+  int pages;  /* Number of allocated pages left */
+  char path[MAX_PATH_SIZE];  /* Path of the mapped file */
+  struct mem_host_mapping_t *next;  /* Linked list */
 };
 
 /* A 4KB page of memory */
 struct mem_page_t {
-	uint32_t tag;
-	enum mem_access_enum perm;  /* Access permissions; combination of flags */
-	struct mem_page_t *next;
-	unsigned char *data;
-	struct mem_host_mapping_t *host_mapping;  /* If other than null, page is host mapping */
+  uint32_t tag;
+  enum mem_access_enum perm;  /* Access permissions; combination of flags */
+  struct mem_page_t *next;
+  unsigned char *data;
+  struct mem_host_mapping_t *host_mapping;  /* If other than null, page is host mapping */
 };
 
 struct mem_t {
-	struct mem_page_t *pages[MEM_PAGE_COUNT];
-	int sharing;  /* Number of contexts sharing memory map */
-	uint32_t last_address;  /* Address of last access */
-	int safe;  /* Safe mode */
-	struct mem_host_mapping_t *host_mapping_list;  /* List of host mappings */
+  struct mem_page_t *pages[MEM_PAGE_COUNT];
+  int sharing;  /* Number of contexts sharing memory map */
+  uint32_t last_address;  /* Address of last access */
+  int safe;  /* Safe mode */
+  struct mem_host_mapping_t *host_mapping_list;  /* List of host mappings */
 };
 
 extern unsigned long mem_mapped_space;
@@ -122,7 +143,7 @@ void mem_map(struct mem_t *mem, uint32_t addr, int size, enum mem_access_enum pe
 void mem_unmap(struct mem_t *mem, uint32_t addr, int size);
 
 void mem_map_host(struct mem_t *mem, struct fd_t *fd, uint32_t addr,
-	int size, enum mem_access_enum perm, void *data);
+		  int size, enum mem_access_enum perm, void *data);
 void mem_unmap_host(struct mem_t *mem, uint32_t addr);
 
 void mem_protect(struct mem_t *mem, uint32_t addr, int size, enum mem_access_enum perm);
@@ -146,21 +167,21 @@ void mem_load(struct mem_t *mem, char *filename, uint32_t start);
 
 struct regs_t {
 	
-	/* Integer registers */
-	uint32_t eax, ecx, edx, ebx;
-	uint32_t esp, ebp, esi, edi;
-	uint16_t es, cs, ss, ds, fs, gs;
-	uint32_t eip;
-	uint32_t eflags;
+  /* Integer registers */
+  uint32_t eax, ecx, edx, ebx;
+  uint32_t esp, ebp, esi, edi;
+  uint16_t es, cs, ss, ds, fs, gs;
+  uint32_t eip;
+  uint32_t eflags;
 
-	/* Floating-point unit */
-	struct {
-		unsigned char value[10];
-		int valid;
-	} fpu_stack[8];
-	int fpu_top;  /* top of stack (field 'top' of status register) */
-	int fpu_code;  /* field 'code' of status register (C3-C2-C1-C0) */
-	uint16_t fpu_ctrl;  /* fpu control word */
+  /* Floating-point unit */
+  struct {
+    unsigned char value[10];
+    int valid;
+  } fpu_stack[8];
+  int fpu_top;  /* top of stack (field 'top' of status register) */
+  int fpu_code;  /* field 'code' of status register (C3-C2-C1-C0) */
+  uint16_t fpu_ctrl;  /* fpu control word */
 } __attribute__((packed));
 
 struct regs_t *regs_create(void);
@@ -180,30 +201,30 @@ extern int elf_debug_category;
 
 
 struct elf_symbol_t {
-	char *name;
-	uint32_t value;
-	uint32_t size;
-	int section;
+  char *name;
+  uint32_t value;
+  uint32_t size;
+  int section;
 };
 
 
 struct elf_file_t {
 	
-	/* ELF file */
-	FILE *f;
-	char path[MAX_PATH_SIZE];
+  /* ELF file */
+  FILE *f;
+  char path[MAX_PATH_SIZE];
 
-	uint32_t size;  /* Size of the file */
-	void *shstr;  /* Section header string table */
-	Elf32_Ehdr ehdr;  /* ELF header */
-	Elf32_Shdr *shdr;  /* Section headers (array of ehdr.e_shnum elements) */
-	Elf32_Phdr *phdr;  /* Program headers (array of ehdr.e_phnum elements) */
-	uint32_t phdt_base;  /* Program header table base */
+  uint32_t size;  /* Size of the file */
+  void *shstr;  /* Section header string table */
+  Elf32_Ehdr ehdr;  /* ELF header */
+  Elf32_Shdr *shdr;  /* Section headers (array of ehdr.e_shnum elements) */
+  Elf32_Phdr *phdr;  /* Program headers (array of ehdr.e_phnum elements) */
+  uint32_t phdt_base;  /* Program header table base */
 
-	/* Symbol table */
-	int symtab_size;
-	int symtab_count;
-	struct elf_symbol_t *symtab;
+  /* Symbol table */
+  int symtab_size;
+  int symtab_count;
+  struct elf_symbol_t *symtab;
 };
 
 
@@ -215,7 +236,7 @@ void elf_free_buffer(void *buf);
 
 int elf_section_count(struct elf_file_t *f);
 int elf_section_info(struct elf_file_t *f, int section,
-	char **pname, uint32_t *paddr, uint32_t *psize, uint32_t *pflags);
+		     char **pname, uint32_t *paddr, uint32_t *psize, uint32_t *pflags);
 void *elf_section_read(struct elf_file_t *f, int section);
 void *elf_section_read_offset(struct elf_file_t *f, int section, uint32_t offset, uint32_t size);
 
@@ -236,21 +257,21 @@ int elf_merge_symtab(struct elf_file_t *f, struct elf_file_t *src);
 
 struct loader_t {
 	
-	/* Program data */
-	struct elf_file_t *elf;
-	struct lnlist_t *args;
-	struct lnlist_t *env;
-	char *interp;  /* Executable interpreter */
-	char *exe;  /* Executable file name */
-	char *cwd;  /* Current working directory */
-	char *stdin_file, *stdout_file;  /* File names for stdin and stdout */
+  /* Program data */
+  struct elf_file_t *elf;
+  struct lnlist_t *args;
+  struct lnlist_t *env;
+  char *interp;  /* Executable interpreter */
+  char *exe;  /* Executable file name */
+  char *cwd;  /* Current working directory */
+  char *stdin_file, *stdout_file;  /* File names for stdin and stdout */
 
-	/* Code pointers */
-	uint32_t stack_base, stack_top, stack_size;
-	uint32_t text_size;
-	uint32_t environ_base, brk, bottom;
-	uint32_t prog_entry, interp_prog_entry;
-	uint32_t phdt_base, phdr_count;
+  /* Code pointers */
+  uint32_t stack_base, stack_top, stack_size;
+  uint32_t text_size;
+  uint32_t environ_base, brk, bottom;
+  uint32_t prog_entry, interp_prog_entry;
+  uint32_t phdt_base, phdr_count;
 };
 
 
@@ -379,11 +400,11 @@ void install_systemcall();
 
 /* Every contexts (parent and children) has its own masks */
 struct signal_masks_t {
-	uint64_t pending;  /* mask of pending signals */
-	uint64_t blocked;  /* mask of blocked signals */
-	uint64_t backup;  /* backup of blocked signals while suspended */
-	struct regs_t *regs;  /* backup of regs while executing handler */
-	uint32_t pretcode;  /* base address of a memory page allocated for retcode execution */
+  uint64_t pending;  /* mask of pending signals */
+  uint64_t blocked;  /* mask of blocked signals */
+  uint64_t backup;  /* backup of blocked signals while suspended */
+  struct regs_t *regs;  /* backup of regs while executing handler */
+  uint32_t pretcode;  /* base address of a memory page allocated for retcode execution */
 };
 
 struct signal_masks_t *signal_masks_create(void);
@@ -392,15 +413,15 @@ void signal_masks_free(struct signal_masks_t *signal_masks);
 /* This structure is shared for parent and child contexts. A change
  * in the singal handler by any of them affects all of them. */
 struct signal_handlers_t {
-	struct sim_sigaction {
-		uint32_t handler;
-		uint32_t flags;
-		uint32_t restorer;
-		uint64_t mask;
-///////****************************************************/
-		void (*sig_handler_pointer)(void);
-/*********************************************************** */
-	} sigaction[64];
+  struct sim_sigaction {
+    uint32_t handler;
+    uint32_t flags;
+    uint32_t restorer;
+    uint64_t mask;
+    ///////****************************************************/
+    void (*sig_handler_pointer)(void);
+    /*********************************************************** */
+  } sigaction[64];
 };
 
 struct signal_handlers_t *install_signal_handlers(void);
@@ -425,26 +446,26 @@ int sim_sigset_member(uint64_t *sim_sigset, int signal);
 /* Files management */
 
 enum fd_kind_enum {
-	fd_kind_regular = 0,  /* Regular file */
-	fd_kind_std,  /* Standard input or output */
-	fd_kind_pipe,  /* A pipe */
-	fd_kind_virtual,  /* A virtual file with artificial contents */
-	fd_kind_gpu,  /* GPU device */
-	fd_kind_socket  /* Network socket */
+  fd_kind_regular = 0,  /* Regular file */
+  fd_kind_std,  /* Standard input or output */
+  fd_kind_pipe,  /* A pipe */
+  fd_kind_virtual,  /* A virtual file with artificial contents */
+  fd_kind_gpu,  /* GPU device */
+  fd_kind_socket  /* Network socket */
 };
 
 /* File descriptor */
 struct fd_t {
-	enum fd_kind_enum kind;  /* File type */
-	int guest_fd;  /* Guest file descriptor id */
-	int host_fd;  /* Equivalent open host file */
-	char path[MAX_PATH_SIZE];  /* Equivalent path if applicable */
-	int flags;  /* O_xxx flags */
+  enum fd_kind_enum kind;  /* File type */
+  int guest_fd;  /* Guest file descriptor id */
+  int host_fd;  /* Equivalent open host file */
+  char path[MAX_PATH_SIZE];  /* Equivalent path if applicable */
+  int flags;  /* O_xxx flags */
 };
 
 /* File descriptor table */
 struct fdt_t {
-	struct list_t *fd_list;  /* List of file descriptors (fd_t elements) */
+  struct list_t *fd_list;  /* List of file descriptors (fd_t elements) */
 };
 
 struct fdt_t *fdt_create(void);
@@ -469,95 +490,95 @@ extern int ctx_debug_category;
 
 struct ctx_t {
 	
-	/* Context properties */
-	int status;
-	int pid;  /* Context id */
-	int mid;  /* Memory id - the same for contexts sharing memory map */
-	struct ctx_t *parent;
-	int exit_signal;  /* Signal to send parent when finished */
-	int exit_code;  /* For zombie processes */
-	uint32_t backup_eip;  /* Saved eip when in specmode */
-	uint32_t set_child_tid, clear_child_tid;
-	uint32_t robust_list_head;  /* robust futex list */
-	uint32_t initial_stack;  /* Value of esp when context is cloned */
+  /* Context properties */
+  int status;
+  int pid;  /* Context id */
+  int mid;  /* Memory id - the same for contexts sharing memory map */
+  struct ctx_t *parent;
+  int exit_signal;  /* Signal to send parent when finished */
+  int exit_code;  /* For zombie processes */
+  uint32_t backup_eip;  /* Saved eip when in specmode */
+  uint32_t set_child_tid, clear_child_tid;
+  uint32_t robust_list_head;  /* robust futex list */
+  uint32_t initial_stack;  /* Value of esp when context is cloned */
 
-	/* Allocation to hardware threads */
-	uint64_t alloc_when;  /* esim_cycle of allocation */
-	uint64_t dealloc_when;  /* esim_cycle of deallocation */
-	int alloc_core, alloc_thread;  /* core/thread id of last allocation */
-	int dealloc_signal;  /* signal to deallocate context */
+  /* Allocation to hardware threads */
+  uint64_t alloc_when;  /* esim_cycle of allocation */
+  uint64_t dealloc_when;  /* esim_cycle of deallocation */
+  int alloc_core, alloc_thread;  /* core/thread id of last allocation */
+  int dealloc_signal;  /* signal to deallocate context */
 
-	/* For segmented memory access in glibc */
-	uint32_t glibc_segment_base;
-	uint32_t glibc_segment_limit;
+  /* For segmented memory access in glibc */
+  uint32_t glibc_segment_base;
+  uint32_t glibc_segment_limit;
 
-	/* For the OpenCL library access */
-	int libopencl_open_attempt;
+  /* For the OpenCL library access */
+  int libopencl_open_attempt;
 
-	/* Host thread that suspends and then schedules call to 'ke_process_events'. */
-	/* The 'host_thread_suspend_active' flag is set when a 'host_thread_suspend' thread
-	 * is launched for this context (by caller).
-	 * It is clear when the context finished (by the host thread).
-	 * It should be accessed safely by locking global mutex 'ke->process_events_mutex'. */
-	pthread_t host_thread_suspend;  /* Thread */
-	int host_thread_suspend_active;  /* Thread-spawned flag */
+  /* Host thread that suspends and then schedules call to 'ke_process_events'. */
+  /* The 'host_thread_suspend_active' flag is set when a 'host_thread_suspend' thread
+   * is launched for this context (by caller).
+   * It is clear when the context finished (by the host thread).
+   * It should be accessed safely by locking global mutex 'ke->process_events_mutex'. */
+  pthread_t host_thread_suspend;  /* Thread */
+  int host_thread_suspend_active;  /* Thread-spawned flag */
 
-	/* Host thread that lets time elapse and schedules call to 'ke_process_events'. */
-	pthread_t host_thread_timer;  /* Thread */
-	int host_thread_timer_active;  /* Thread-spawned flag */
-	uint64_t host_thread_timer_wakeup;  /* Time when the thread will wake up */
+  /* Host thread that lets time elapse and schedules call to 'ke_process_events'. */
+  pthread_t host_thread_timer;  /* Thread */
+  int host_thread_timer_active;  /* Thread-spawned flag */
+  uint64_t host_thread_timer_wakeup;  /* Time when the thread will wake up */
 
-	/* Three timers used by 'setitimer' system call - real, virtual, and prof. */
-	uint64_t itimer_value[3];  /* Time when current occurrence of timer expires (0=inactive) */
-	uint64_t itimer_interval[3];  /* Interval (in usec) of repetition (0=inactive) */
+  /* Three timers used by 'setitimer' system call - real, virtual, and prof. */
+  uint64_t itimer_value[3];  /* Time when current occurrence of timer expires (0=inactive) */
+  uint64_t itimer_interval[3];  /* Interval (in usec) of repetition (0=inactive) */
 
-	/* Variables used to wake up suspended contexts. */
-	uint64_t wakeup_time;  /* ke_timer time to wake up (poll/nanosleep) */
-	int wakeup_fd;  /* File descriptor (read/write/poll) */
-	int wakeup_events;  /* Events for wake up (poll) */
-	int wakeup_pid;  /* Pid waiting for (waitpid) */
-	uint32_t wakeup_futex;  /* Address of futex where context is suspended */
-	uint32_t wakeup_futex_bitset;  /* Bit mask for selective futex wakeup */
-	uint64_t wakeup_futex_sleep;  /* Assignment from ke->futex_sleep_count */
+  /* Variables used to wake up suspended contexts. */
+  uint64_t wakeup_time;  /* ke_timer time to wake up (poll/nanosleep) */
+  int wakeup_fd;  /* File descriptor (read/write/poll) */
+  int wakeup_events;  /* Events for wake up (poll) */
+  int wakeup_pid;  /* Pid waiting for (waitpid) */
+  uint32_t wakeup_futex;  /* Address of futex where context is suspended */
+  uint32_t wakeup_futex_bitset;  /* Bit mask for selective futex wakeup */
+  uint64_t wakeup_futex_sleep;  /* Assignment from ke->futex_sleep_count */
 
-	/* Links to contexts forming a linked list. */
-	struct ctx_t *context_next, *context_prev;
-	struct ctx_t *running_next, *running_prev;
-	struct ctx_t *suspended_next, *suspended_prev;
-	struct ctx_t *finished_next, *finished_prev;
-	struct ctx_t *zombie_next, *zombie_prev;
-	struct ctx_t *alloc_next, *alloc_prev;
+  /* Links to contexts forming a linked list. */
+  struct ctx_t *context_next, *context_prev;
+  struct ctx_t *running_next, *running_prev;
+  struct ctx_t *suspended_next, *suspended_prev;
+  struct ctx_t *finished_next, *finished_prev;
+  struct ctx_t *zombie_next, *zombie_prev;
+  struct ctx_t *alloc_next, *alloc_prev;
 
-	/* Substructures */
-	struct loader_t *loader;
-	struct mem_t *mem;  /* Virtual memory image */
-	struct fdt_t *fdt;  /* File descriptor table */
-	struct regs_t *regs;  /* Logical register file */
-	struct signal_masks_t *signal_masks;
-	struct signal_handlers_t *signal_handlers;
+  /* Substructures */
+  struct loader_t *loader;
+  struct mem_t *mem;  /* Virtual memory image */
+  struct fdt_t *fdt;  /* File descriptor table */
+  struct regs_t *regs;  /* Logical register file */
+  struct signal_masks_t *signal_masks;
+  struct signal_handlers_t *signal_handlers;
 
-	int instr_slice;
-	int uid;
+  int instr_slice;
+  int uid;
 };
 
 enum ctx_status_enum {
-	ctx_running      = 0x0001,  /* it is able to run instructions */
-	ctx_specmode     = 0x0002,  /* executing in speculative mode */
-	ctx_suspended    = 0x0004,  /* suspended in a system call */
-	ctx_finished     = 0x0008,  /* no more inst to execute */
-	ctx_exclusive    = 0x0010,  /* executing in excl mode */
-	ctx_locked       = 0x0020,  /* another context is running in excl mode */
-	ctx_handler      = 0x0040,  /* executing a signal handler */
-	ctx_sigsuspend   = 0x0080,  /* suspended after syscall 'sigsuspend' */
-	ctx_nanosleep    = 0x0100,  /* suspended after syscall 'nanosleep' */
-	ctx_poll         = 0x0200,  /* 'poll' system call */
-	ctx_read         = 0x0400,  /* 'read' system call */
-	ctx_write        = 0x0800,  /* 'write' system call */
-	ctx_waitpid      = 0x1000,  /* 'waitpid' system call */
-	ctx_zombie       = 0x2000,  /* zombie context */
-	ctx_futex        = 0x4000,  /* suspended in a futex */
-	ctx_alloc        = 0x8000,  /* allocated to a core/thread */
-	ctx_none         = 0x0000
+  ctx_running      = 0x0001,  /* it is able to run instructions */
+  ctx_specmode     = 0x0002,  /* executing in speculative mode */
+  ctx_suspended    = 0x0004,  /* suspended in a system call */
+  ctx_finished     = 0x0008,  /* no more inst to execute */
+  ctx_exclusive    = 0x0010,  /* executing in excl mode */
+  ctx_locked       = 0x0020,  /* another context is running in excl mode */
+  ctx_handler      = 0x0040,  /* executing a signal handler */
+  ctx_sigsuspend   = 0x0080,  /* suspended after syscall 'sigsuspend' */
+  ctx_nanosleep    = 0x0100,  /* suspended after syscall 'nanosleep' */
+  ctx_poll         = 0x0200,  /* 'poll' system call */
+  ctx_read         = 0x0400,  /* 'read' system call */
+  ctx_write        = 0x0800,  /* 'write' system call */
+  ctx_waitpid      = 0x1000,  /* 'waitpid' system call */
+  ctx_zombie       = 0x2000,  /* zombie context */
+  ctx_futex        = 0x4000,  /* suspended in a futex */
+  ctx_alloc        = 0x8000,  /* allocated to a core/thread */
+  ctx_none         = 0x0000
 };
 
 struct ctx_t *ctx_create(void);
@@ -596,45 +617,45 @@ void ctx_gen_proc_self_maps(struct ctx_t *ctx, char *path);
 
 struct kernel_t {
 
-	/* pid & mid assignment */
-	int current_pid;
-	int current_mid;
+  /* pid & mid assignment */
+  int current_pid;
+  int current_mid;
 
-	/* Schedule next call to 'ke_process_events()'.
-	 * The call will only be effective if 'process_events_force' is set.
-	 * This flag should be accessed thread-safely locking 'process_events_mutex'. */
-	pthread_mutex_t process_events_mutex;
-	int process_events_force;
+  /* Schedule next call to 'ke_process_events()'.
+   * The call will only be effective if 'process_events_force' is set.
+   * This flag should be accessed thread-safely locking 'process_events_mutex'. */
+  pthread_mutex_t process_events_mutex;
+  int process_events_force;
 
-	/* Counter of times that a context has been suspended in a
-	 * futex. Used for FIFO wakeups. */
-	uint64_t futex_sleep_count;
+  /* Counter of times that a context has been suspended in a
+   * futex. Used for FIFO wakeups. */
+  uint64_t futex_sleep_count;
 	
-	/* Flag set when any context changes any status other than 'specmode' */
-	int context_reschedule;
+  /* Flag set when any context changes any status other than 'specmode' */
+  int context_reschedule;
 
-	/* Lists of contexts */
-	int context_count, context_max;
-	int running_count, running_max;
-	int suspended_count, suspended_max;
-	int zombie_count, zombie_max;
-	int finished_count, finished_max;
-	int alloc_count, alloc_max;
-	struct ctx_t *context_list_head, *context_list_tail;
-	struct ctx_t *running_list_head, *running_list_tail;
-	struct ctx_t *suspended_list_head, *suspended_list_tail;
-	struct ctx_t *zombie_list_head, *zombie_list_tail;
-	struct ctx_t *finished_list_head, *finished_list_tail;
-	struct ctx_t *alloc_list_head, *alloc_list_tail;
+  /* Lists of contexts */
+  int context_count, context_max;
+  int running_count, running_max;
+  int suspended_count, suspended_max;
+  int zombie_count, zombie_max;
+  int finished_count, finished_max;
+  int alloc_count, alloc_max;
+  struct ctx_t *context_list_head, *context_list_tail;
+  struct ctx_t *running_list_head, *running_list_tail;
+  struct ctx_t *suspended_list_head, *suspended_list_tail;
+  struct ctx_t *zombie_list_head, *zombie_list_tail;
+  struct ctx_t *finished_list_head, *finished_list_tail;
+  struct ctx_t *alloc_list_head, *alloc_list_tail;
 };
 
 enum ke_list_enum {
-	ke_list_context = 0,
-	ke_list_running,
-	ke_list_suspended,
-	ke_list_zombie,
-	ke_list_finished,
-	ke_list_alloc
+  ke_list_context = 0,
+  ke_list_running,
+  ke_list_suspended,
+  ke_list_zombie,
+  ke_list_finished,
+  ke_list_alloc
 };
 
 void ke_list_insert_head(enum ke_list_enum list, struct ctx_t *ctx);

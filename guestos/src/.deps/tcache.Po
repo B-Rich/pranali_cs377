@@ -39,7 +39,10 @@ tcache.o: tcache.c m2s.h /extra/tool-chain/sysroot/usr/include/time.h \
  /extra/tool-chain/sysroot/usr/include/asm/posix_types_32.h \
  /extra/tool-chain/sysroot/usr/include/bits/sigstack.h \
  /extra/tool-chain/sysroot/usr/include/bits/pthreadtypes.h \
- /extra/tool-chain/sysroot/usr/include/bits/sigthread.h list.h \
+ /extra/tool-chain/sysroot/usr/include/bits/sigthread.h \
+ ../src/libstruct/list.h ../src/libstruct/lnlist.h \
+ ../src/libstruct/repos.h ../src/libcachesystem/cachesystem.h \
+ ../src/libmhandle/mhandle.h \
  /extra/tool-chain/sysroot/usr/include/stdlib.h \
  /extra/tool-chain/sysroot/usr/include/sys/types.h \
  /extra/tool-chain/sysroot/usr/include/endian.h \
@@ -48,9 +51,7 @@ tcache.o: tcache.c m2s.h /extra/tool-chain/sysroot/usr/include/time.h \
  /extra/tool-chain/sysroot/usr/include/sys/select.h \
  /extra/tool-chain/sysroot/usr/include/bits/select.h \
  /extra/tool-chain/sysroot/usr/include/sys/sysmacros.h \
- /extra/tool-chain/sysroot/usr/include/alloca.h ../src/libstruct/lnlist.h \
- ../src/libstruct/repos.h ../src/libcachesystem/cachesystem.h \
- ../src/libmhandle/mhandle.h \
+ /extra/tool-chain/sysroot/usr/include/alloca.h \
  /extra/tool-chain/sysroot/usr/include/string.h \
  /extra/tool-chain/sysroot/usr/include/bits/string.h \
  /extra/tool-chain/sysroot/usr/include/bits/string2.h \
@@ -171,7 +172,15 @@ m2s.h:
 
 /extra/tool-chain/sysroot/usr/include/bits/sigthread.h:
 
-list.h:
+../src/libstruct/list.h:
+
+../src/libstruct/lnlist.h:
+
+../src/libstruct/repos.h:
+
+../src/libcachesystem/cachesystem.h:
+
+../src/libmhandle/mhandle.h:
 
 /extra/tool-chain/sysroot/usr/include/stdlib.h:
 
@@ -190,14 +199,6 @@ list.h:
 /extra/tool-chain/sysroot/usr/include/sys/sysmacros.h:
 
 /extra/tool-chain/sysroot/usr/include/alloca.h:
-
-../src/libstruct/lnlist.h:
-
-../src/libstruct/repos.h:
-
-../src/libcachesystem/cachesystem.h:
-
-../src/libmhandle/mhandle.h:
 
 /extra/tool-chain/sysroot/usr/include/string.h:
 

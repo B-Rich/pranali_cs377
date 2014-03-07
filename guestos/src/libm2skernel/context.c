@@ -270,18 +270,18 @@ static void ctx_update_status(struct ctx_t *ctx, enum ctx_status_enum status)
 		ke->context_reschedule = 1;
 	
 	/* Update status */
-	ctx->status = status;
+	ctx->status = status_diff;
 	if (ctx->status & ctx_finished)
 		ctx->status = ctx_finished | (status & ctx_alloc);
 	if (ctx->status & ctx_zombie)
 		ctx->status = ctx_zombie | (status & ctx_alloc);
-	if (!(ctx->status & ctx_suspended) &&
+	/*if (!(ctx->status & ctx_suspended) &&
 		!(ctx->status & ctx_finished) &&
 		!(ctx->status & ctx_zombie) &&
 		!(ctx->status & ctx_locked))
 		ctx->status |= ctx_running;
 	else
-		ctx->status &= ~ctx_running;
+	ctx->status &= ~ctx_running;*/
 	
 	/* Insert context into the corresponding lists. */
 	if (ctx->status & ctx_running)

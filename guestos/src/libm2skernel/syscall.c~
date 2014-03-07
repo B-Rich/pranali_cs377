@@ -827,12 +827,13 @@ void block_process(int diff) {
 		fflush(stdout);							
 		return ;	
 	}
-	ke_list_remove(ke_list_running, isa_ctx);
+	//ke_list_remove(ke_list_running, isa_ctx);
 	ctx_set_status(isa_ctx, ctx_suspended);
-	ke_list_insert_head(ke_list_suspended, isa_ctx);
+	//ke_list_insert_head(ke_list_suspended, isa_ctx);
 	// INSERT INTO PENDING INTERRUPT LIST
 	
 	my_insert(diff,isa_ctx->uid, interrupt_list); // POINTER TO INTERRUPT_LIST MUST BE PASSED
+	printf("Process with UID %d to be back at instruction %d\n", isa_ctx->uid, diff);
 }
 
 int handle_guest_syscalls() {

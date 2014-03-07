@@ -80,7 +80,7 @@ cal-abi.o: cal-abi.c gpukernel-local.h gpukernel.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h \
  /extra/tool-chain/sysroot/usr/include/sys/time.h \
- ../../src/libm2skernel/../mylist.h ../../src/libdisasm/machine.dat
+ ../../src/libdisasm/machine.dat
 
 gpukernel-local.h:
 
@@ -259,7 +259,5 @@ opencl.dat:
 /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h:
 
 /extra/tool-chain/sysroot/usr/include/sys/time.h:
-
-../../src/libm2skernel/../mylist.h:
 
 ../../src/libdisasm/machine.dat:
