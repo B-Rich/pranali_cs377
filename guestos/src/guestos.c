@@ -60,7 +60,10 @@ static uint64_t sim_inst = 0;
 /* Variables */
 static int sigint_received = 0;
 extern int instr_slice;
-
+extern int num_instr_executed;
+extern int last_visited_block;
+extern int delay_per_block;
+extern mylist *interrupt_list;
 //int max_path_length = 100;
 void shell();
 
@@ -164,6 +167,10 @@ void set_defaults(void) {
 	char param_value[LINE_MAX+1];
 	get_param("INSTR_SLICE", param_value);
 	instr_slice = atoi(param_value);
+	num_instr_executed=0;
+	last_visited_block=0;
+	delay_per_block=5;
+	interrupt_list->head = NULL;
 
 	int heads, tracks, sectors;
 	char command[1000];

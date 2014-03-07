@@ -12,7 +12,7 @@ typedef struct
 {
 	node* head;
 } mylist;
-void insert(node* a,mylist* l)
+void my_insert(node* a,mylist* l)
 {
 	node* cur;
 	node* cur_next;
@@ -43,12 +43,12 @@ void insert(node* a,mylist* l)
 	return;	
 }
 
-node* top(mylist *l)
+node* my_top(mylist *l)
 {
 	return l->head;
 }
 
-void delete(mylist* l)
+void my_delete(mylist* l)
 {
 	if(l->head)
 	{
@@ -59,7 +59,7 @@ void delete(mylist* l)
 	}
 }
 
-int main()
+/*int main()
 {
 	srand(time(NULL));
 	mylist l;
@@ -80,4 +80,4 @@ int main()
 		delete(&l);
 	}
 	return 0;
-}
+}*/

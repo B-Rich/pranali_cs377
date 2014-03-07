@@ -94,15 +94,21 @@ void ke_run(void)
 	for (ctx = ke->running_list_head; ctx; ctx = ctx->running_next) {
 		int i;
 		//printf ("out - %p\n", ctx);
-
-		for ( i = 0 ; i < ctx->instr_slice ; ++i) {
-			ctx_execute_inst(ctx);
-
-		if (ctx_get_status(ctx, ctx_finished))
-				break;
-		}
 		
-	}
+		// CHECK IF THERE ARE INTERRUPTS WAITING TO HAPPEN
+	
+		for ( i = 0 ; i < ctx->instr_slice ; ++i) {
+			if (ctx->status==ctx_suspended) {
+				break;
+			}
+			
+			if (ctx_get_status(ctx, ctx_finished))
+				break;
+			}	
+			
+			ctx_execute_inst(ctx);
+			num_instr_executed++;
+		}
 	
 	
 	/* Free finished contexts */

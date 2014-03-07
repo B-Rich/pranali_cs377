@@ -80,7 +80,7 @@ opencl-obj.o: opencl-obj.c gpukernel-local.h gpukernel.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h \
  /extra/tool-chain/sysroot/usr/include/sys/time.h \
- ../../src/libdisasm/machine.dat
+ ../../src/libm2skernel/../list.h ../../src/libdisasm/machine.dat
 
 gpukernel-local.h:
 
@@ -259,5 +259,7 @@ opencl.dat:
 /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h:
 
 /extra/tool-chain/sysroot/usr/include/sys/time.h:
+
+../../src/libm2skernel/../list.h:
 
 ../../src/libdisasm/machine.dat:

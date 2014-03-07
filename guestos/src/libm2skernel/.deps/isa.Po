@@ -79,7 +79,7 @@ isa.o: isa.c m2skernel.h ../../src/libmhandle/mhandle.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h \
  ../../src/libgpukernel/gpukernel.h ../../src/libgpukernel/opencl.dat \
- /extra/tool-chain/sysroot/usr/include/sys/time.h \
+ /extra/tool-chain/sysroot/usr/include/sys/time.h ../list.h \
  ../../src/libdisasm/machine.dat
 
 m2skernel.h:
@@ -257,5 +257,7 @@ m2skernel.h:
 ../../src/libgpukernel/opencl.dat:
 
 /extra/tool-chain/sysroot/usr/include/sys/time.h:
+
+../list.h:
 
 ../../src/libdisasm/machine.dat:

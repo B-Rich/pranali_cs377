@@ -418,10 +418,10 @@ m4trace:configure.in:17: -1- m4_pattern_allow([^HAVE_ST_BLOCKS$])
 m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_ST_BLOCKS], [/* Define to 1 if your `struct stat\' has `st_blocks\'. Deprecated, use
    `HAVE_STRUCT_STAT_ST_BLOCKS\' instead. */
 @%:@undef HAVE_ST_BLOCKS])
-m4trace:configure.in:17: -1- AC_LIBSOURCE([fileblocks.c])
 m4trace:configure.in:17: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS fileblocks.$ac_objext"])
 m4trace:configure.in:17: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:17: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:17: -1- AC_LIBSOURCE([fileblocks.c])
 m4trace:configure.in:18: -1- AC_DEFINE_TRACE_LITERAL([HAVE_STRUCT_STAT_ST_RDEV])
 m4trace:configure.in:18: -1- m4_pattern_allow([^HAVE_STRUCT_STAT_ST_RDEV$])
 m4trace:configure.in:18: -1- AH_OUTPUT([HAVE_STRUCT_STAT_ST_RDEV], [/* Define to 1 if `st_rdev\' is a member of `struct stat\'. */
@@ -435,7 +435,6 @@ m4trace:configure.in:23: -1- m4_pattern_allow([^LSTAT_FOLLOWS_SLASHED_SYMLINK$])
 m4trace:configure.in:23: -1- AH_OUTPUT([LSTAT_FOLLOWS_SLASHED_SYMLINK], [/* Define to 1 if `lstat\' dereferences a symlink specified with a trailing
    slash. */
 @%:@undef LSTAT_FOLLOWS_SLASHED_SYMLINK])
-m4trace:configure.in:23: -1- AC_LIBSOURCE([lstat.c])
 m4trace:configure.in:23: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS lstat.$ac_objext"])
 m4trace:configure.in:23: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:23: -1- m4_pattern_allow([^LIB@&t@OBJS$])
@@ -443,6 +442,7 @@ m4trace:configure.in:23: -1- AC_LIBSOURCE([lstat.c])
 m4trace:configure.in:23: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS lstat.$ac_objext"])
 m4trace:configure.in:23: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:23: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:23: -1- AC_LIBSOURCE([lstat.c])
 m4trace:configure.in:23: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LSTAT_EMPTY_STRING_BUG])
 m4trace:configure.in:23: -1- m4_pattern_allow([^HAVE_LSTAT_EMPTY_STRING_BUG$])
 m4trace:configure.in:23: -1- AH_OUTPUT([HAVE_LSTAT_EMPTY_STRING_BUG], [/* Define to 1 if `lstat\' has the bug that it succeeds when given the
@@ -453,10 +453,10 @@ m4trace:configure.in:24: -1- m4_pattern_allow([^LSTAT_FOLLOWS_SLASHED_SYMLINK$])
 m4trace:configure.in:24: -1- AH_OUTPUT([LSTAT_FOLLOWS_SLASHED_SYMLINK], [/* Define to 1 if `lstat\' dereferences a symlink specified with a trailing
    slash. */
 @%:@undef LSTAT_FOLLOWS_SLASHED_SYMLINK])
-m4trace:configure.in:24: -1- AC_LIBSOURCE([lstat.c])
 m4trace:configure.in:24: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS lstat.$ac_objext"])
 m4trace:configure.in:24: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:24: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:24: -1- AC_LIBSOURCE([lstat.c])
 m4trace:configure.in:25: -1- AH_OUTPUT([HAVE_STDLIB_H], [/* Define to 1 if you have the <stdlib.h> header file. */
 @%:@undef HAVE_STDLIB_H])
 m4trace:configure.in:25: -1- AC_DEFINE_TRACE_LITERAL([HAVE_STDLIB_H])
@@ -468,10 +468,10 @@ m4trace:configure.in:25: -1- AH_OUTPUT([HAVE_MALLOC], [/* Define to 1 if your sy
 @%:@undef HAVE_MALLOC])
 m4trace:configure.in:25: -1- AC_DEFINE_TRACE_LITERAL([HAVE_MALLOC])
 m4trace:configure.in:25: -1- m4_pattern_allow([^HAVE_MALLOC$])
-m4trace:configure.in:25: -1- AC_LIBSOURCE([malloc.c])
 m4trace:configure.in:25: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS malloc.$ac_objext"])
 m4trace:configure.in:25: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:25: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:25: -1- AC_LIBSOURCE([malloc.c])
 m4trace:configure.in:25: -1- AC_DEFINE_TRACE_LITERAL([malloc])
 m4trace:configure.in:25: -1- m4_pattern_allow([^malloc$])
 m4trace:configure.in:25: -1- AH_OUTPUT([malloc], [/* Define to rpl_malloc if the replacement function should be used. */
@@ -487,10 +487,10 @@ m4trace:configure.in:26: -1- AH_OUTPUT([HAVE_REALLOC], [/* Define to 1 if your s
 @%:@undef HAVE_REALLOC])
 m4trace:configure.in:26: -1- AC_DEFINE_TRACE_LITERAL([HAVE_REALLOC])
 m4trace:configure.in:26: -1- m4_pattern_allow([^HAVE_REALLOC$])
-m4trace:configure.in:26: -1- AC_LIBSOURCE([realloc.c])
 m4trace:configure.in:26: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS realloc.$ac_objext"])
 m4trace:configure.in:26: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:26: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:26: -1- AC_LIBSOURCE([realloc.c])
 m4trace:configure.in:26: -1- AC_DEFINE_TRACE_LITERAL([realloc])
 m4trace:configure.in:26: -1- m4_pattern_allow([^realloc$])
 m4trace:configure.in:26: -1- AH_OUTPUT([realloc], [/* Define to rpl_realloc if the replacement function should be used. */
@@ -502,10 +502,10 @@ m4trace:configure.in:27: -1- AC_DEFINE_TRACE_LITERAL([RETSIGTYPE])
 m4trace:configure.in:27: -1- m4_pattern_allow([^RETSIGTYPE$])
 m4trace:configure.in:27: -1- AH_OUTPUT([RETSIGTYPE], [/* Define as the return type of signal handlers (`int\' or `void\'). */
 @%:@undef RETSIGTYPE])
-m4trace:configure.in:28: -1- AC_LIBSOURCE([stat.c])
 m4trace:configure.in:28: -1- AC_SUBST([LIB@&t@OBJS], ["$LIB@&t@OBJS stat.$ac_objext"])
 m4trace:configure.in:28: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.in:28: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.in:28: -1- AC_LIBSOURCE([stat.c])
 m4trace:configure.in:28: -1- AC_DEFINE_TRACE_LITERAL([HAVE_STAT_EMPTY_STRING_BUG])
 m4trace:configure.in:28: -1- m4_pattern_allow([^HAVE_STAT_EMPTY_STRING_BUG$])
 m4trace:configure.in:28: -1- AH_OUTPUT([HAVE_STAT_EMPTY_STRING_BUG], [/* Define to 1 if `stat\' has the bug that it succeeds when given the

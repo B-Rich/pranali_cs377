@@ -819,6 +819,24 @@ int get_pid() {
 	return isa_ctx->pid;
 }
 
+void block_process(int diff) {
+	// Blocking Pranali subprocess here
+	if (isa_ctx->status != ctx_running)
+	{
+		printf("process wanting read is not running\n");
+		fflush(stdout);							
+		return -1;	
+	}
+	ke_list_remove(ke_list_running, isa_ctx);
+	ctx_set_status(isa_ctx, ctx_suspended);
+	ke_list_insert_head(ke_list_suspended, isa_ctx);
+	// INSERT INTO PENDING INTERRUPT LIST
+	node* a = (node*)malloc(sizeof(node));
+	a->next = NULL;
+	a->inst_no = diff;
+	my_insert(a, interrupt_list); // POINTER TO INTERRUPT_LIST MUST BE PASSED
+}
+
 int handle_guest_syscalls() {
     int syscode = isa_regs->eax;
     int retval = 0;
@@ -893,8 +911,13 @@ int handle_guest_syscalls() {
 					}
 					fread(buf,1,count,fd);
 					mem_write(isa_mem, pbuf, count, buf);
-					printf("read done\n");
-					fflush(stdout);					
+					int j = db_no - last_visited_block;
+					int instr_diff = (j < 0) ? -j : j;
+					instr_diff *= delay_per_block;
+					instr_diff += num_instr_executed + 1;
+					block_process(instr_diff);
+					last_visited_block = db_no + (db_offset + count)/512;
+					printf("read done\n"); fflush(stdout);					
 	
 				}
 				else	//'w'
@@ -917,8 +940,13 @@ int handle_guest_syscalls() {
 					}
 					mem_read(isa_mem, pbuf, count, buf);
 					fwrite(buf,1,count,fd);
-					printf("write done\n");					
-					fflush(stdout);					
+					int j = db_no - last_visited_block;
+					int instr_diff = (j < 0) ? -j : j;
+					instr_diff *= delay_per_block;
+					instr_diff += num_instr_executed + 1;
+					block_process(instr_diff);
+					last_visited_block = db_no + (db_offset + count)/512;
+					printf("write done\n");	fflush(stdout);					
 				}
 				free(buf);
 				fclose(fd);

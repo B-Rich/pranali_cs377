@@ -55,9 +55,8 @@ guestos.o: guestos.c ../src/libopt/options.h \
  /extra/tool-chain/sysroot/usr/include/bits/string.h \
  /extra/tool-chain/sysroot/usr/include/bits/string2.h \
  ../src/libstruct/debug.h ../src/libstruct/config.h \
- ../src/libstruct/buffer.h ../src/libstruct/list.h \
- ../src/libstruct/lnlist.h ../src/libmisc/misc.h \
- /extra/tool-chain/sysroot/usr/include/elf.h \
+ ../src/libstruct/buffer.h list.h ../src/libstruct/lnlist.h \
+ ../src/libmisc/misc.h /extra/tool-chain/sysroot/usr/include/elf.h \
  /extra/tool-chain/sysroot/usr/include/unistd.h \
  /extra/tool-chain/sysroot/usr/include/bits/posix_opt.h \
  /extra/tool-chain/sysroot/usr/include/bits/confname.h \
@@ -81,7 +80,7 @@ guestos.o: guestos.c ../src/libopt/options.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h \
  ../src/libgpukernel/gpukernel.h ../src/libgpukernel/opencl.dat \
  /extra/tool-chain/sysroot/usr/include/sys/time.h \
- ../src/libm2skernel/../list.c ../src/libdisasm/machine.dat \
+ ../src/libm2skernel/../list.h ../src/libdisasm/machine.dat \
  /extra/tool-chain/tools/lib/gcc/i686-sangita-linux-gnu/4.4.3/include-fixed/limits.h \
  /extra/tool-chain/tools/lib/gcc/i686-sangita-linux-gnu/4.4.3/include-fixed/syslimits.h \
  /extra/tool-chain/sysroot/usr/include/limits.h \
@@ -210,7 +209,7 @@ guestos.o: guestos.c ../src/libopt/options.h \
 
 ../src/libstruct/buffer.h:
 
-../src/libstruct/list.h:
+list.h:
 
 ../src/libstruct/lnlist.h:
 
@@ -268,7 +267,7 @@ guestos.o: guestos.c ../src/libopt/options.h \
 
 /extra/tool-chain/sysroot/usr/include/sys/time.h:
 
-../src/libm2skernel/../list.c:
+../src/libm2skernel/../list.h:
 
 ../src/libdisasm/machine.dat:
 

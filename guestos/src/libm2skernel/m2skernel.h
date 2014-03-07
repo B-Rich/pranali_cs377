@@ -40,15 +40,19 @@
 #include <errno.h>
 #include <gpukernel.h>
 #include <sys/time.h>
-
+#include "../list.h"
 
 /* Some forward declarations */
 struct ctx_t;
 struct fd_t;
 
 int instr_slice;
+int num_instr_executed;
 int* memory_access_table;
 int num_virtual_blocks;
+int last_visited_block;
+int delay_per_block;
+mylist *interrupt_list;
 /* Maximum length for paths */
 #define MAX_PATH_SIZE  200
 
