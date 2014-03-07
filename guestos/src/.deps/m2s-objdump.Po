@@ -37,9 +37,8 @@ m2s-objdump.o: m2s-objdump.c ../src/libopt/options.h \
  /extra/tool-chain/sysroot/usr/include/bits/string.h \
  /extra/tool-chain/sysroot/usr/include/bits/string2.h \
  ../src/libstruct/debug.h ../src/libstruct/config.h \
- ../src/libstruct/buffer.h ../src/libstruct/list.h \
- ../src/libstruct/lnlist.h ../src/libmisc/misc.h \
- /extra/tool-chain/sysroot/usr/include/elf.h \
+ ../src/libstruct/buffer.h list.h ../src/libstruct/lnlist.h \
+ ../src/libmisc/misc.h /extra/tool-chain/sysroot/usr/include/elf.h \
  /extra/tool-chain/sysroot/usr/include/unistd.h \
  /extra/tool-chain/sysroot/usr/include/bits/posix_opt.h \
  /extra/tool-chain/sysroot/usr/include/bits/confname.h \
@@ -167,7 +166,7 @@ m2s-objdump.o: m2s-objdump.c ../src/libopt/options.h \
 
 ../src/libstruct/buffer.h:
 
-../src/libstruct/list.h:
+list.h:
 
 ../src/libstruct/lnlist.h:
 

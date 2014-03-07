@@ -81,7 +81,7 @@ guestos.o: guestos.c ../src/libopt/options.h \
  /extra/tool-chain/sysroot/usr/include/asm-generic/errno-base.h \
  ../src/libgpukernel/gpukernel.h ../src/libgpukernel/opencl.dat \
  /extra/tool-chain/sysroot/usr/include/sys/time.h \
- ../src/libm2skernel/../list.c ../src/libdisasm/machine.dat \
+ ../src/libm2skernel/../mylist.h ../src/libdisasm/machine.dat \
  /extra/tool-chain/tools/lib/gcc/i686-sangita-linux-gnu/4.4.3/include-fixed/limits.h \
  /extra/tool-chain/tools/lib/gcc/i686-sangita-linux-gnu/4.4.3/include-fixed/syslimits.h \
  /extra/tool-chain/sysroot/usr/include/limits.h \
@@ -268,7 +268,7 @@ guestos.o: guestos.c ../src/libopt/options.h \
 
 /extra/tool-chain/sysroot/usr/include/sys/time.h:
 
-../src/libm2skernel/../list.c:
+../src/libm2skernel/../mylist.h:
 
 ../src/libdisasm/machine.dat:
 
