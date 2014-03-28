@@ -1,0 +1,51 @@
+Functions Analysed:
+
+ld_load_prog_from_ctxconfig:
+	-This function reads the configfile and sets up the context for each process to be executed
+	-It then calls the ld_load_exe function to load the program into memory
+
+ld_load_exe
+	- This function calls elf_open which reads the executable to find out details of its sections and program headers
+	- then ld_load_section, ld_load_stack and others are called which will actually create pages for these things and map them to the main memory(of both pranali and current process)
+
+ld_load_section/ld_load_stack:
+	- this function will map this memory to physical memory using memory_map function
+
+memory_map:
+	- this function will map memory on the heap(of pranali) to the pages using mem_page_create function if it is not already assosciated to some page(checked using mem_get_page function)
+	
+mem_get_page:
+	- this function will take in a physical memory location and return the corresponding physical page( physical in perspective of this process on pranali)
+
+mem_page_create:
+	- this function will create a new page in the heap allocated to pranali
+
+
+------------------------------------------------------------------------------------
+
+Modifications needed:
+
+mem_page_create:
+	- new page should now instead be created in the swap space of the process, which will be on the disk, that is simdisk in this case
+
+mem_page_get:
+	- this should return the page in main memory if available.
+	- and invoke the fetching of the page to main memory otherwise.
+
+------------------------------------------------------------------------------------
+
+new Functions needed:
+
+disk_page_create:
+	- this function should create a new page on the simdisk in the swap space of the process
+
+page_get:
+	- this function should fetch the page from swap space (simdisk) to main memory
+	- if found in main memory(main for both the process and pranali), we return it
+	- else it is a page fault and will be handled as:
+	- we will maintain a count for how many pages of a particular process are in memory
+	- and we will allocate new space for the page being fetched on the heap if count < max_allowed_count_for_a_process
+	- otherwise, we invoke the page replacement function which will free space of a page as per page replacement policy and allocate space for this page being fetched
+	
+
+
