@@ -1,0 +1,27 @@
+CS377 OS Design Project
+Team A3 - Virtual Memory
+
+Work Division
+
+We identify three major portions of the work to be done-
+
+1) Swap space management (3)- 
+
+	Create swap space for every program, on the Sim_disk. This will be an implement-from-scratch operation.
+	Loading	program data in appropriate swap space- This will need us to make changes to function ld_load_exe, which currently loads all program data into goad-knows-where.
+	Selection of initial pages to load in Pranali main memory
+
+	Members- Raghav Gupta (110100092), Vipul Venkataraman (110050084), Mohit Gupta (110050085)
+
+2) Page management and fault handling (2)- 
+	
+	Detect page faults.
+	Call for page in and page out operations. This needs to assume presence of swap space.
+	Page replacement policy falls under this ambit. Also, this needs to assume presence of page table lookup (part 3).
+
+	Members- Sagar Jha (110100024), C Yeshwanth (110050083)
+
+3) New page table implementation (1)- 
+	Our group has been instructed to implement a multilevel page table.
+	Changes to be made to existing structure of the page table and the page table entry.
+	Member- Guna Prasaad (110050082)
