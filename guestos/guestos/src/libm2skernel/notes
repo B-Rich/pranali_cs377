@@ -1,0 +1,3 @@
+init_flag = 0 -> create a new page
+valid bit = 1 :-> data will point to something in memory
+valid bit = 0 :-> data will be NULL; and the corresponding data will be stored in disk

@@ -65,6 +65,8 @@ extern int last_visited_block;
 extern int delay_per_block;
 extern mylist *interrupt_list;
 extern int heads, tracks, sectors;
+extern int trackCost;
+extern int sectorCost;
 //int max_path_length = 100;
 void shell();
 
@@ -174,6 +176,8 @@ void set_defaults(void) {
 	interrupt_list = (mylist*) malloc (sizeof(mylist));
 	interrupt_list->head = NULL;
 
+	trackCost = 10000;
+	sectorCost = 1000;
 	// int heads, tracks, sectors;
 	char command[1000];
 	get_param("NUM_HEADS",param_value);
